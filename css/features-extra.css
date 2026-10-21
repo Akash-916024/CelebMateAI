@@ -1,4 +1,4 @@
-/* CelebMate AI — Chat, Invitations, Themes, and Responsive Breakpoints */
+/* CelebMate AI — Chat, Invitations, Themes, and Responsive Optimization */
 
 /* Chat Assistant Feature */
 .chat-box {
@@ -55,7 +55,8 @@
 }
 
 .chip-btn {
-  padding: 6px 14px;
+  padding: 8px 16px;
+  min-height: 40px;
   background: var(--color-bg-surface-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
@@ -79,14 +80,14 @@
 }
 
 .swatch {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 2px solid var(--color-border);
   background-color: var(--swatch-bg, var(--color-primary));
 }
 
-/* Responsive Breakpoints */
+/* Responsive Breakpoints & Mobile Optimization */
 @media (max-width: 840px) {
   .sidebar {
     position: fixed;
@@ -94,6 +95,7 @@
     bottom: 0;
     left: 0;
     transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
   }
 
   .sidebar.open {
@@ -101,6 +103,41 @@
   }
 
   .mobile-menu-btn {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .page-wrapper {
+    padding: var(--space-md);
+  }
+
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0 var(--space-sm);
+  }
+
+  .header-left h1 {
+    font-size: 1.25rem;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
