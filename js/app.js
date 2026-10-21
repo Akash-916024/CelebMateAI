@@ -10,6 +10,7 @@ import { getLocal, setLocal, removeLocal } from './utils/storage.js';
 import { openModal, closeModal } from './components/modal.js';
 import { showToast } from './components/toast.js';
 import { initNavigation, switchSection } from './components/navigation.js';
+import { initBudgetPlanner } from './features/budget-planner.js';
 
 /**
  * Initializes dropdown options for event types and cities.
@@ -129,4 +130,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation((sectionId) => {
     switchSection(sectionId);
   });
+  initBudgetPlanner();
 });
