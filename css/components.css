@@ -1,4 +1,4 @@
-/* CelebMate AI — Reusable Component Styles */
+/* CelebMate AI — Reusable Component Styles: Navigation, Header, Buttons, Forms */
 
 /* Sidebar Navigation */
 .sidebar {
@@ -20,15 +20,8 @@
   margin-bottom: var(--space-md);
 }
 
-.brand-logo {
-  font-size: 1.6rem;
-}
-
-.brand-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
+.brand-logo { font-size: 1.6rem; }
+.brand-title { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
 
 .nav-menu {
   list-style: none;
@@ -36,10 +29,6 @@
   flex-direction: column;
   gap: var(--space-2xs);
   flex: 1;
-}
-
-.nav-item {
-  width: 100%;
 }
 
 .nav-link {
@@ -66,8 +55,11 @@
   box-shadow: var(--shadow-glow);
 }
 
-.nav-icon {
-  font-size: 1.2rem;
+.nav-icon { font-size: 1.2rem; }
+
+.sidebar-footer {
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
 }
 
 /* Header Component */
@@ -99,28 +91,6 @@
   font-size: 1.5rem;
   cursor: pointer;
   padding: var(--space-2xs);
-}
-
-/* Glass & Card Containers */
-.card {
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
-}
-
-.card:hover {
-  border-color: var(--color-border-glow);
-}
-
-.glass-panel {
-  background: var(--color-bg-glass-card);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
 }
 
 /* Buttons */
@@ -161,20 +131,11 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Forms */
-.form-group {
-  margin-bottom: var(--space-md);
-}
+.form-group { margin-bottom: var(--space-md); }
 
 .form-label {
   display: block;
@@ -199,73 +160,4 @@
 .form-control:focus {
   border-color: var(--color-primary);
   outline: none;
-}
-
-/* Modal */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: var(--space-md);
-}
-
-.modal-dialog {
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  max-width: 520px;
-  width: 100%;
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-
-.modal-header {
-  padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-body {
-  padding: var(--space-lg);
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.modal-footer {
-  padding: var(--space-sm) var(--space-lg);
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-xs);
-}
-
-/* Toast Notifications */
-.toast-container {
-  position: fixed;
-  bottom: var(--space-lg);
-  right: var(--space-lg);
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.toast {
-  background: var(--color-bg-surface-elevated);
-  border: 1px solid var(--color-border);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  font-size: 0.9rem;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
 }
