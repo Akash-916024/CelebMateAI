@@ -4,9 +4,15 @@
  */
 
 import { describe, it, assert, assertEqual } from './test-runner.js';
-import { escapeHtml, stripHtml, sanitizeText, sanitizeChatMessage } from '../js/utils/sanitizer.js';
+import { escapeHtml, stripHtml, sanitizeText, sanitizeChatMessage, cleanInvitationText } from '../js/utils/sanitizer.js';
 
 describe('Sanitizer Security Tests', () => {
+  it('cleanInvitationText strips markdown bold asterisks and hashes', () => {
+    const raw = '**തീയതി:** [തീയതി ചേർക്കുക] **സ്ഥലം:** [ഹാൾ]';
+    const cleaned = cleanInvitationText(raw);
+    assert(!cleaned.includes('**'), 'Asterisks should be stripped');
+    assert(cleaned.includes('തീയതി:'), 'Malayalam text should be preserved');
+  });
   it('escapeHtml should convert dangerous tags and quotes', () => {
     const raw = '<script>alert("xss")</script>';
     const escaped = escapeHtml(raw);

@@ -4,14 +4,20 @@
  * @module features/invitation
  */
 
-import { qs, createElement } from '../utils/dom-helpers.js';
-import { LANGUAGES, TONES } from '../config.js';
+import { qs } from '../utils/dom-helpers.js';
+import { EVENT_TYPES, STORAGE_KEYS } from '../config.js';
+import { getLocal } from '../utils/storage.js';
 import { generateContent } from '../ai-engine.js';
 import { showToast } from '../components/toast.js';
 import { isNonEmpty } from '../utils/validators.js';
+import { cleanInvitationText } from '../utils/sanitizer.js';
+import { exportInvitationToPdf } from '../utils/pdf-printer.js';
+import { setupInvitationChips } from '../components/invitation-chips.js';
 
-let selectedLang = 'english';
-let selectedTone = 'traditional';
+const state = {
+  selectedLang: 'english',
+  selectedTone: 'traditional'
+};
 
 /**
  * Initializes and mounts the Invitation Generator UI.
@@ -19,6 +25,8 @@ let selectedTone = 'traditional';
 export function initInvitationGenerator() {
   const container = qs('#section-invitation');
   if (!container) return;
+
+  const eventData = getLocal(STORAGE_KEYS.EVENT_DATA, { eventId: 'wedding' });
 
   container.innerHTML = `
     <div class="section-header">
@@ -29,12 +37,16 @@ export function initInvitationGenerator() {
       <div class="card">
         <h3>Invitation Details</h3>
         <div class="form-group">
+          <label for="invEventType" class="form-label">Celebration Type</label>
+          <select id="invEventType" class="form-control"></select>
+        </div>
+        <div class="form-group">
           <label for="invHosts" class="form-label">Host Family / Organizer</label>
           <input type="text" id="invHosts" class="form-control" value="Sharma Family" placeholder="e.g., Sharma Family">
         </div>
         <div class="form-group">
-          <label for="invCouple" class="form-label">Honoree / Couple Name(s)</label>
-          <input type="text" id="invCouple" class="form-control" value="Aarav & Ananya" placeholder="e.g., Aarav & Ananya">
+          <label for="invHonoree" class="form-label" id="invHonoreeLabel">Honoree / Name(s)</label>
+          <input type="text" id="invHonoree" class="form-control" value="Ananya" placeholder="e.g., Ananya">
         </div>
         <div class="form-group">
           <label class="form-label">Language</label>
@@ -44,94 +56,129 @@ export function initInvitationGenerator() {
           <label class="form-label">Tone</label>
           <div class="tag-chips" id="toneChips"></div>
         </div>
-        <button id="generateInvBtn" class="btn btn-primary">
-          <span aria-hidden="true">💌</span> Generate Invitation
-        </button>
+        <button id="generateInvBtn" class="btn btn-primary"><span aria-hidden="true">💌</span> Generate Invitation</button>
       </div>
-
       <div class="card">
-        <h3>Crafted Message</h3>
-        <div class="glass-panel" id="invitationPreviewBox">
-          <p id="invitationResultText" class="section-subtitle">Click 'Generate Invitation' to compose your card message.</p>
+        <h3>Celebration Card Preview</h3>
+        <div class="celebration-card" id="invitationCard">
+          <div class="card-header-motif" aria-hidden="true">✨ 🪔 🌸 🪔 ✨</div>
+          <div class="card-header-title" id="cardHeaderTitle">Celebration Invitation</div>
+          <hr class="card-divider">
+          <div id="invitationResultText" class="card-message-body">Click 'Generate Invitation' to compose your card message.</div>
+          <hr class="card-divider">
+          <div class="card-footer" id="cardFooterText">With warm regards & blessings</div>
         </div>
-        <button id="copyInvBtn" class="btn btn-secondary card-spacing">
-          <span aria-hidden="true">📋</span> Copy to Clipboard
-        </button>
+        <div class="card-actions-row">
+          <button id="copyInvBtn" class="btn btn-secondary"><span aria-hidden="true">📋</span> Copy to Clipboard</button>
+          <button id="downloadPdfBtn" class="btn btn-primary"><span aria-hidden="true">📄</span> Download / Print PDF</button>
+        </div>
       </div>
     </div>
   `;
 
-  renderChips();
+  initEventTypeDropdown(eventData.eventId);
+  setupInvitationChips(qs('#langChips'), qs('#toneChips'), state);
 
-  const genBtn = qs('#generateInvBtn');
-  if (genBtn) genBtn.addEventListener('click', handleGenerateInvitation);
+  qs('#generateInvBtn')?.addEventListener('click', handleGenerateInvitation);
+  qs('#copyInvBtn')?.addEventListener('click', handleCopyInvitation);
+  qs('#downloadPdfBtn')?.addEventListener('click', handleDownloadPdf);
 
-  const copyBtn = qs('#copyInvBtn');
-  if (copyBtn) copyBtn.addEventListener('click', handleCopyInvitation);
+  window.addEventListener('celebmate:event-updated', (e) => {
+    if (e.detail?.eventId) {
+      const select = qs('#invEventType');
+      if (select) {
+        select.value = e.detail.eventId;
+        updateHonoreeField(e.detail.eventId);
+      }
+    }
+  });
 }
 
 /**
- * Renders language and tone chip selectors.
+ * Sets up celebration type select options and syncs field labels.
+ * @param {string} activeId
  */
-function renderChips() {
-  const langBox = qs('#langChips');
-  if (langBox) {
-    LANGUAGES.forEach((lang) => {
-      const btn = createElement('button', {
-        className: `chip-btn ${lang.id === selectedLang ? 'active' : ''}`,
-        type: 'button'
-      }, lang.label);
-      btn.addEventListener('click', () => {
-        selectedLang = lang.id;
-        langBox.querySelectorAll('.chip-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-      langBox.appendChild(btn);
-    });
-  }
+function initEventTypeDropdown(activeId) {
+  const select = qs('#invEventType');
+  if (!select) return;
 
-  const toneBox = qs('#toneChips');
-  if (toneBox) {
-    TONES.forEach((tone) => {
-      const btn = createElement('button', {
-        className: `chip-btn ${tone.id === selectedTone ? 'active' : ''}`,
-        type: 'button'
-      }, `${tone.emoji} ${tone.label}`);
-      btn.addEventListener('click', () => {
-        selectedTone = tone.id;
-        toneBox.querySelectorAll('.chip-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-      toneBox.appendChild(btn);
-    });
+  Object.values(EVENT_TYPES).forEach((item) => {
+    const opt = document.createElement('option');
+    opt.value = item.id;
+    opt.textContent = `${item.icon} ${item.label}`;
+    select.appendChild(opt);
+  });
+
+  select.value = activeId || 'wedding';
+  updateHonoreeField(select.value);
+
+  select.addEventListener('change', () => {
+    updateHonoreeField(select.value);
+  });
+}
+
+/**
+ * Updates label and placeholder based on selected event type.
+ * @param {string} eventId
+ */
+function updateHonoreeField(eventId) {
+  const label = qs('#invHonoreeLabel');
+  const input = qs('#invHonoree');
+  if (!label || !input) return;
+
+  if (eventId === 'birthday') {
+    label.textContent = "Birthday Person's Name";
+    input.placeholder = 'e.g., Ananya';
+    if (!input.value || input.value.includes('&')) input.value = 'Ananya';
+  } else if (eventId === 'wedding' || eventId === 'engagement') {
+    label.textContent = 'Couple Name(s)';
+    input.placeholder = 'e.g., Aarav & Ananya';
+    if (!input.value || !input.value.includes('&')) input.value = 'Aarav & Ananya';
+  } else {
+    label.textContent = 'Honoree / Family Name';
+    input.placeholder = 'e.g., Sharma Family';
   }
 }
 
 /**
- * Generates invitation text with AI.
+ * Generates celebration invitation text with AI.
  */
 async function handleGenerateInvitation() {
   const hosts = qs('#invHosts')?.value || '';
-  const honorees = qs('#invCouple')?.value || '';
+  const honoree = qs('#invHonoree')?.value || '';
+  const eventId = qs('#invEventType')?.value || 'wedding';
 
-  if (!isNonEmpty(hosts) || !isNonEmpty(honorees)) {
+  if (!isNonEmpty(hosts) || !isNonEmpty(honoree)) {
     showToast('Please provide both host family and honoree names.', 'warning');
     return;
   }
 
-  const genBtn = qs('#generateInvBtn');
-  const resultText = qs('#invitationResultText');
+  const eventConfig = Object.values(EVENT_TYPES).find((e) => e.id === eventId);
+  const eventLabel = eventConfig ? eventConfig.label : eventId;
 
+  const genBtn = qs('#generateInvBtn');
   if (genBtn) genBtn.disabled = true;
 
   try {
-    const prompt = `Write a ${selectedTone} celebration invitation message in ${selectedLang} from ${hosts} celebrating ${honorees}. Include warm traditional Indian welcoming phrases and RSVP requests. Return only the invitation text.`;
-    const message = await generateContent(prompt, `inv_${selectedLang}_${selectedTone}`);
+    const prompt = `Write a ${state.selectedTone} invitation message in ${state.selectedLang} language from ${hosts} celebrating ${honoree} for a ${eventLabel}.
+Strict rules:
+1. This is strictly a ${eventLabel} invitation. If Birthday, do NOT mention wedding/marriage/bride/groom. Mention birthday celebration and blessings.
+2. Do not use markdown asterisks (**) or bullet points. Use clean text.
+3. Include Date, Time, Venue, and RSVP placeholders cleanly.
+Return only the message text.`;
 
-    if (resultText) {
-      resultText.textContent = message.trim();
-    }
-    showToast('Invitation crafted successfully!', 'success');
+    const rawMessage = await generateContent(prompt, `inv_${eventId}_${state.selectedLang}_${state.selectedTone}_${honoree}`);
+    const cleanMessage = cleanInvitationText(rawMessage);
+
+    const titleEl = qs('#cardHeaderTitle');
+    const resultEl = qs('#invitationResultText');
+    const footerEl = qs('#cardFooterText');
+
+    if (titleEl) titleEl.textContent = `${eventConfig ? eventConfig.icon : '🎉'} ${eventLabel} Invitation`;
+    if (resultEl) resultEl.textContent = cleanMessage;
+    if (footerEl) footerEl.textContent = `Warmly invited by ${hosts}`;
+
+    showToast('Celebration card crafted!', 'success');
   } catch (err) {
     console.error(err);
     showToast('Failed to generate invitation.', 'error');
@@ -156,4 +203,19 @@ async function handleCopyInvitation() {
   } catch {
     showToast('Could not access clipboard.', 'error');
   }
+}
+
+/**
+ * Downloads or prints the invitation card as a formatted PDF.
+ */
+function handleDownloadPdf() {
+  const title = qs('#cardHeaderTitle')?.textContent || 'Celebration Invitation';
+  const text = qs('#invitationResultText')?.textContent;
+
+  if (!text || text.includes('Click \'Generate Invitation\'')) {
+    showToast('Please generate an invitation first.', 'warning');
+    return;
+  }
+
+  exportInvitationToPdf(title, text);
 }

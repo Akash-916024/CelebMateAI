@@ -90,24 +90,59 @@ function initSettingsModal() {
 }
 
 /**
+ * Updates the dashboard summary card metrics with active celebration data.
+ * @param {Object} eventData
+ */
+function updateDashboardSummary(eventData) {
+  const eventConfig = Object.values(EVENT_TYPES).find((e) => e.id === eventData.eventId);
+  const eventSummary = qs('#dashEventSummary');
+  if (eventSummary) {
+    eventSummary.textContent = eventConfig ? `${eventConfig.icon} ${eventConfig.label}` : 'Celebration';
+  }
+
+  const budgetSummary = qs('#dashBudgetSummary');
+  if (budgetSummary) {
+    budgetSummary.textContent = `₹${Number(eventData.budget).toLocaleString('en-IN')}`;
+  }
+}
+
+/**
  * Handles dashboard quick configuration form and quick action buttons.
  */
 function initDashboardActions() {
+  const savedData = getLocal(STORAGE_KEYS.EVENT_DATA, {
+    eventId: 'wedding',
+    city: 'Mumbai',
+    guests: 250,
+    budget: 1500000
+  });
+
+  const eventSelect = qs('#eventSelect');
+  const citySelect = qs('#citySelect');
+  const guestInput = qs('#guestInput');
+  const budgetInput = qs('#budgetInput');
+
+  if (eventSelect) eventSelect.value = savedData.eventId;
+  if (citySelect) citySelect.value = savedData.city;
+  if (guestInput) guestInput.value = savedData.guests;
+  if (budgetInput) budgetInput.value = savedData.budget;
+
+  updateDashboardSummary(savedData);
+
   const form = qs('#quickEventForm');
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const eventId = qs('#eventSelect')?.value || 'wedding';
-      const city = qs('#citySelect')?.value || 'Mumbai';
-      const guests = qs('#guestInput')?.value || 250;
-      const budget = qs('#budgetInput')?.value || 1500000;
+      const eventId = eventSelect?.value || 'wedding';
+      const city = citySelect?.value || 'Mumbai';
+      const guests = guestInput?.value || 250;
+      const budget = budgetInput?.value || 1500000;
 
       const eventData = { eventId, city, guests: Number(guests), budget: Number(budget) };
       setLocal(STORAGE_KEYS.EVENT_DATA, eventData);
+      updateDashboardSummary(eventData);
 
-      const summary = qs('#dashBudgetSummary');
-      if (summary) summary.textContent = `₹${Number(budget).toLocaleString('en-IN')}`;
-
+      window.dispatchEvent(new CustomEvent('celebmate:event-updated', { detail: eventData }));
       showToast('Event settings updated!', 'success');
     });
   }

@@ -1,0 +1,59 @@
+/* CelebMate AI — Celebration Invitation Card & Print Styling */
+
+.celebration-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 152, 0, 0.05));
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(255, 152, 0, 0.12);
+  transition: transform var(--transition-fast);
+}
+
+.card-header-motif {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-xs);
+  letter-spacing: 4px;
+}
+
+.card-header-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: var(--space-xs);
+  letter-spacing: 0.5px;
+}
+
+.card-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+  margin: var(--space-sm) 0;
+}
+
+.card-message-body {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  white-space: pre-wrap;
+  text-align: left;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.card-highlight {
+  color: var(--color-secondary);
+  font-weight: 700;
+}
+
+.card-actions-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.card-actions-row .btn {
+  flex: 1;
+  min-width: 140px;
+}

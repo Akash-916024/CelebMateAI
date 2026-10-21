@@ -67,3 +67,17 @@ export function sanitizeChatMessage(message) {
   }
   return { safe: true, sanitized, reason: '' };
 }
+
+/**
+ * Cleans markdown formatting asterisks and headers from AI invitation responses.
+ * @param {string} text - Raw AI invitation output
+ * @returns {string} Clean plain text suitable for invitation cards
+ */
+export function cleanInvitationText(text) {
+  if (typeof text !== 'string') return '';
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/^#+\s+/gm, '')
+    .trim();
+}
