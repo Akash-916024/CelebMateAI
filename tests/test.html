@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CelebMate AI — Automated Test Suite</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/modals-toasts.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="section-header">
+      <h1>CelebMate AI Test Runner</h1>
+      <p class="section-subtitle">Automated unit, integration, security, and accessibility test suites.</p>
+      <div class="card-spacing">
+        <a href="../index.html" class="btn btn-secondary btn-sm">← Back to Application</a>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="stat-card">
+        <div class="stat-icon" aria-hidden="true">🧪</div>
+        <div>
+          <div class="stat-value" id="summaryScore">Running tests...</div>
+          <div class="stat-label" id="summarySub">Please wait</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-spacing" id="testResultsList"></div>
+  </div>
+
+  <script type="module">
+    import { testResults } from './test-runner.js';
+    import './test-validators.js';
+    import './test-sanitizer.js';
+    import './test-budget.js';
+    import './test-ai-engine.js';
+    import './test-accessibility.js';
+
+    const score = document.getElementById('summaryScore');
+    const sub = document.getElementById('summarySub');
+    const list = document.getElementById('testResultsList');
+
+    if (score && sub && list) {
+      const passRate = Math.round((testResults.passed / testResults.total) * 100);
+      score.textContent = `${testResults.passed} / ${testResults.total} Passed (${passRate}%)`;
+      sub.textContent = testResults.failed === 0 ? 'All Test Suites Passed Successfully!' : `${testResults.failed} Failed`;
+
+      testResults.suites.forEach((suite) => {
+        const suiteEl = document.createElement('div');
+        suiteEl.className = 'section-header card-spacing';
+
+        const title = document.createElement('h3');
+        title.textContent = suite.name;
+        suiteEl.appendChild(title);
+
+        suite.tests.forEach((t) => {
+          const row = document.createElement('div');
+          row.className = 'budget-item';
+
+          const desc = document.createElement('span');
+          desc.textContent = t.description;
+
+          const badge = document.createElement('span');
+          badge.className = t.status === 'pass' ? 'stat-label' : 'stat-value';
+          badge.textContent = t.status === 'pass' ? '✅ PASS' : `❌ FAIL: ${t.error}`;
+
+          row.appendChild(desc);
+          row.appendChild(badge);
+          suiteEl.appendChild(row);
+        });
+
+        list.appendChild(suiteEl);
+      });
+    }
+  </script>
+</body>
+</html>
