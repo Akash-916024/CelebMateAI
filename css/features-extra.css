@@ -83,6 +83,7 @@
   height: 28px;
   border-radius: 50%;
   border: 2px solid var(--color-border);
+  background-color: var(--swatch-bg, var(--color-primary));
 }
 
 /* Responsive Breakpoints */

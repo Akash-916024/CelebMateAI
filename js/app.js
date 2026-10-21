@@ -14,6 +14,7 @@ import { initBudgetPlanner } from './features/budget-planner.js';
 import { initTimeline } from './features/timeline.js';
 import { initChatAssistant } from './features/chat-assistant.js';
 import { initInvitationGenerator } from './features/invitation.js';
+import { initThemeSuggester } from './features/theme-suggester.js';
 
 /**
  * Initializes dropdown options for event types and cities.
@@ -137,4 +138,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTimeline();
   initChatAssistant();
   initInvitationGenerator();
+  initThemeSuggester();
 });
