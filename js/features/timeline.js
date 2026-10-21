@@ -9,6 +9,7 @@ import { getLocal, setLocal } from '../utils/storage.js';
 import { STORAGE_KEYS } from '../config.js';
 import { generateContent } from '../ai-engine.js';
 import { showToast } from '../components/toast.js';
+import { validateEventDate } from '../utils/validators.js';
 
 /**
  * Initializes and mounts the Timeline Generator UI into the timeline section.
@@ -58,6 +59,12 @@ export function initTimeline() {
  */
 async function handleGenerateTimeline() {
   const dateInput = qs('#eventDateInput')?.value;
+  const dateCheck = validateEventDate(dateInput);
+  if (!dateCheck.valid) {
+    showToast(dateCheck.message, 'warning');
+    return;
+  }
+
   const eventData = getLocal(STORAGE_KEYS.EVENT_DATA, { eventId: 'wedding' });
 
   const btn = qs('#generateTimelineBtn');

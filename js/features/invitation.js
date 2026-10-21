@@ -8,6 +8,7 @@ import { qs, createElement } from '../utils/dom-helpers.js';
 import { LANGUAGES, TONES } from '../config.js';
 import { generateContent } from '../ai-engine.js';
 import { showToast } from '../components/toast.js';
+import { isNonEmpty } from '../utils/validators.js';
 
 let selectedLang = 'english';
 let selectedTone = 'traditional';
@@ -110,8 +111,14 @@ function renderChips() {
  * Generates invitation text with AI.
  */
 async function handleGenerateInvitation() {
-  const hosts = qs('#invHosts')?.value || 'The Family';
-  const honorees = qs('#invCouple')?.value || 'Our Loved Ones';
+  const hosts = qs('#invHosts')?.value || '';
+  const honorees = qs('#invCouple')?.value || '';
+
+  if (!isNonEmpty(hosts) || !isNonEmpty(honorees)) {
+    showToast('Please provide both host family and honoree names.', 'warning');
+    return;
+  }
+
   const genBtn = qs('#generateInvBtn');
   const resultText = qs('#invitationResultText');
 

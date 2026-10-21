@@ -9,6 +9,7 @@ import { getLocal, setLocal } from '../utils/storage.js';
 import { STORAGE_KEYS, EVENT_TYPES } from '../config.js';
 import { generateContent } from '../ai-engine.js';
 import { showToast } from '../components/toast.js';
+import { validateBudget, validateGuestCount } from '../utils/validators.js';
 
 /**
  * Initializes and mounts the Budget Planner UI into the budget section.
@@ -68,6 +69,19 @@ export function initBudgetPlanner() {
 async function handleCalculateBudget() {
   const budgetVal = Number(qs('#bpBudgetInput')?.value) || 1500000;
   const guestsVal = Number(qs('#bpGuestsInput')?.value) || 250;
+
+  const budgetCheck = validateBudget(budgetVal);
+  if (!budgetCheck.valid) {
+    showToast(budgetCheck.message, 'warning');
+    return;
+  }
+
+  const guestCheck = validateGuestCount(guestsVal);
+  if (!guestCheck.valid) {
+    showToast(guestCheck.message, 'warning');
+    return;
+  }
+
   const eventData = getLocal(STORAGE_KEYS.EVENT_DATA, { eventId: 'wedding', city: 'Mumbai' });
 
   const btn = qs('#calculateBudgetBtn');
