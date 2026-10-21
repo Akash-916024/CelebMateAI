@@ -11,6 +11,7 @@ import { openModal, closeModal } from './components/modal.js';
 import { showToast } from './components/toast.js';
 import { initNavigation, switchSection } from './components/navigation.js';
 import { initBudgetPlanner } from './features/budget-planner.js';
+import { initTimeline } from './features/timeline.js';
 
 /**
  * Initializes dropdown options for event types and cities.
@@ -131,4 +132,5 @@ document.addEventListener('DOMContentLoaded', () => {
     switchSection(sectionId);
   });
   initBudgetPlanner();
+  initTimeline();
 });
