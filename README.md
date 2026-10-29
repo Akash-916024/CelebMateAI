@@ -25,8 +25,11 @@ graph LR
 1. **💰 AI Budget Planner**: Calculates itemized expense allocations (Mandap, Catering, Photography, Décor, Attire, Rituals) formatted in Indian Rupees (INR) with visual breakdown.
 2. **📅 Smart Timeline Generator**: Produces chronological milestone checklists (6 Months, 4 Months, 1 Week, Day of Event) with interactive task completion tracking.
 3. **🤖 Celebration Assistant**: Context-aware conversational advisor providing cultural etiquette, multi-course Indian menus, and vendor negotiation tips.
-4. **💌 Multilingual Invitation Generator**: Crafts warm, culturally authentic invitation messages in English, Hindi, Tamil, Telugu, Kannada, and Malayalam across multiple tones (Traditional, Modern, Formal).
+4. **💌 Multilingual Invitation Generator**: Crafts warm, culturally authentic invitation messages in English, Hindi, Tamil, Telugu, Kannada, and Malayalam across multiple tones with native PDF export.
 5. **🎭 Theme & Décor Suggester**: Curates thematic celebration aesthetics (Royal Heritage, Modern Pastel, Temple Heritage) with active color swatches and cost guidance.
+6. **🕉️ Muhurat & Auspicious Date Finder**: Discovers favorable dates, tithis, and nakshatras aligned with Vedic and regional (Tamil, Telugu, Malayalam) traditions.
+7. **🏪 Vendor Hub & Checklist**: Tracks service providers across key celebration categories with status pipelines and AI negotiation contract safeguards.
+8. **👥 Guest RSVP & Dietary Management**: Tracks attendee headcounts, traditional dietary splits (Pure Veg, Non-Veg, Jain), and one-click catering CSV exports.
 
 ---
 
@@ -46,8 +49,8 @@ graph LR
 
 | Hack2Skill Criteria | Implementation in CelebMate AI |
 |---|---|
-| **Code Quality** (High) | Strict modularity (<150 lines/file), zero inline styles, JSDoc typing, `.editorconfig`, 14 git commits |
-| **Testing** (High) | 6 test suites covering validators, security, sanitizer, budget math, and WCAG accessibility |
+| **Code Quality** (High) | Strict modularity (<150 lines/file), zero inline styles, JSDoc typing, `.editorconfig`, 15+ git commits |
+| **Testing** (High) | 9 test suites covering validators, security, sanitizer, budget math, WCAG accessibility, muhurat, vendors, and guests |
 | **Security** (Medium) | Client-side BYOK model, XSS prevention via `sanitizer.js`, zero PII leakage, documented `SECURITY.md` |
 | **Efficiency** (Medium) | Ultra-lightweight footprint (<100KB total repo size), session caching, debounced inputs |
 | **Accessibility** (Medium) | WCAG AA compliant contrast ratios, keyboard focus rings, ARIA live regions, skip-to-content navigation |

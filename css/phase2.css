@@ -1,0 +1,114 @@
+/* CelebMate AI — Phase 2 Styling: Muhurat, Vendor Hub, and Guest RSVP */
+
+/* Muhurat / Auspicious Date Cards */
+.muhurat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.muhurat-card {
+  background: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.muhurat-card:hover {
+  border-color: var(--color-secondary);
+  transform: translateY(-2px);
+}
+
+.muhurat-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-secondary-hover);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: var(--space-xs);
+}
+
+.muhurat-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: var(--space-2xs) 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.muhurat-meta-val {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Vendor Hub Components */
+.vendor-category-bar {
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.vendor-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  gap: var(--space-xs);
+}
+
+.vendor-status-pill {
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  width: fit-content;
+}
+
+.status-to-contact { background: var(--color-warning-bg); color: var(--color-warning); }
+.status-shortlisted { background: var(--color-primary-light); color: var(--color-primary); }
+.status-booked { background: var(--color-success-bg); color: var(--color-success); }
+
+/* Guest & RSVP Components */
+.guest-metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.guest-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm);
+  background: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xs);
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.diet-pill {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+.diet-veg { background: rgba(46, 160, 67, 0.2); color: #3fb950; }
+.diet-nonveg { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+.diet-jain { background: rgba(255, 152, 0, 0.2); color: #ffa726; }

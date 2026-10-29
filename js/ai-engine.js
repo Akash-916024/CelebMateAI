@@ -110,5 +110,24 @@ export function generateSmartFallback(prompt) {
     ]);
   }
 
+  if (lower.includes('muhurat') || lower.includes('auspicious')) {
+    return JSON.stringify([
+      { date: '14 Nov 2026', day: 'Saturday', tithi: 'Shukla Panchami', nakshatra: 'Rohini', time: '09:15 AM - 11:30 AM', significance: 'Highly auspicious for vivah, kalyanam & new beginnings' },
+      { date: '22 Nov 2026', day: 'Sunday', tithi: 'Shukla Ekadashi', nakshatra: 'Uttara Phalguni', time: '10:00 AM - 12:45 PM', significance: 'Favorable planetary alignment for family celebrations' },
+      { date: '06 Dec 2026', day: 'Sunday', tithi: 'Shukla Trayodashi', nakshatra: 'Anuradha', time: '07:30 AM - 09:45 AM', significance: 'Traditional South & North Indian auspicious muhurtham' }
+    ]);
+  }
+
+  if (lower.includes('vendor')) {
+    return JSON.stringify({
+      tips: 'Ensure 30% advance, 50% on event day, and 20% post-delivery with written itemized deliverables.',
+      questions: [
+        'Do you provide an all-inclusive setup and cleanup crew?',
+        'What is your backup plan if lead photographer or chef is unavailable?',
+        'Are generator backups and overtime fees included in the quote?'
+      ]
+    });
+  }
+
   return 'I am your CelebMate AI planning companion! Ask me anything regarding themes, regional dishes, rituals, or budget balancing.';
 }

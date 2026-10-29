@@ -97,7 +97,10 @@ export const STORAGE_KEYS = {
   BUDGET_DATA: 'celebmate_budget_data',
   TIMELINE_DATA: 'celebmate_timeline_data',
   CHAT_HISTORY: 'celebmate_chat_history',
-  THEME_PREFS: 'celebmate_theme_prefs'
+  THEME_PREFS: 'celebmate_theme_prefs',
+  MUHURAT_DATA: 'celebmate_muhurat_data',
+  VENDOR_DATA: 'celebmate_vendor_data',
+  GUEST_DATA: 'celebmate_guest_data'
 };
 
 /** Navigation items */
@@ -107,5 +110,8 @@ export const NAV_ITEMS = [
   { id: 'timeline', label: 'Timeline', icon: '📅', section: 'timeline' },
   { id: 'chat', label: 'AI Assistant', icon: '🤖', section: 'chat' },
   { id: 'invitation', label: 'Invitations', icon: '💌', section: 'invitation' },
-  { id: 'themes', label: 'Themes & Décor', icon: '🎭', section: 'themes' }
+  { id: 'themes', label: 'Themes & Décor', icon: '🎭', section: 'themes' },
+  { id: 'muhurat', label: 'Muhurat Finder', icon: '🕉️', section: 'muhurat' },
+  { id: 'vendors', label: 'Vendor Hub', icon: '🏪', section: 'vendors' },
+  { id: 'guests', label: 'Guest & RSVP', icon: '👥', section: 'guests' }
 ];
