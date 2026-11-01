@@ -12,12 +12,8 @@ import { showToast } from './components/toast.js';
 import { initNavigation, switchSection } from './components/navigation.js';
 import { initBudgetPlanner } from './features/budget-planner.js';
 import { initTimeline } from './features/timeline.js';
-import { initChatAssistant } from './features/chat-assistant.js';
-import { initInvitationGenerator } from './features/invitation.js';
-import { initThemeSuggester } from './features/theme-suggester.js';
-import { initMuhuratFinder } from './features/muhurat.js';
 import { initVendorHub } from './features/vendor-checklist.js';
-import { initGuestManager } from './features/guest-manager.js';
+import { initInvitationGenerator } from './features/invitation.js';
 
 /**
  * Initializes dropdown options for event types and cities.
@@ -174,10 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   initBudgetPlanner();
   initTimeline();
-  initChatAssistant();
-  initInvitationGenerator();
-  initThemeSuggester();
-  initMuhuratFinder();
   initVendorHub();
-  initGuestManager();
+  initInvitationGenerator();
 });

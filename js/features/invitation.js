@@ -1,6 +1,6 @@
 /**
- * CelebMate AI — Invitation Message Generator Feature
- * Crafts personalized, multilingual celebration invitations with cultural warmth
+ * CelebMate AI — Ideas Studio & Multilingual Invitation Feature
+ * Crafts personalized, multilingual celebration invitations with cultural warmth & themes
  * @module features/invitation
  */
 
@@ -13,6 +13,7 @@ import { isNonEmpty } from '../utils/validators.js';
 import { cleanInvitationText } from '../utils/sanitizer.js';
 import { exportInvitationToPdf } from '../utils/pdf-printer.js';
 import { setupInvitationChips } from '../components/invitation-chips.js';
+import { initEventTypeDropdown, updateHonoreeField, loadThemesIntoContainer } from '../components/invitation-helpers.js';
 
 const state = {
   selectedLang: 'english',
@@ -20,22 +21,22 @@ const state = {
 };
 
 /**
- * Initializes and mounts the Invitation Generator UI.
+ * Initializes and mounts the Ideas Studio & Invitation Designer UI.
  */
 export function initInvitationGenerator() {
-  const container = qs('#section-invitation');
+  const container = qs('#section-ideas');
   if (!container) return;
 
   const eventData = getLocal(STORAGE_KEYS.EVENT_DATA, { eventId: 'wedding' });
 
   container.innerHTML = `
     <div class="section-header">
-      <h2>Multilingual Invitation Generator</h2>
-      <p class="section-subtitle">Compose heartfelt invitations in Indian regional languages with custom cultural tones.</p>
+      <h2>✨ Ideas Studio & Invitation Designer</h2>
+      <p class="section-subtitle">Craft multilingual celebration cards with native PDF export, and explore curated décor themes.</p>
     </div>
     <div class="grid-2">
       <div class="card">
-        <h3>Invitation Details</h3>
+        <h3>1. Multilingual Invitation Details</h3>
         <div class="form-group">
           <label for="invEventType" class="form-label">Celebration Type</label>
           <select id="invEventType" class="form-control"></select>
@@ -74,6 +75,14 @@ export function initInvitationGenerator() {
         </div>
       </div>
     </div>
+    <div class="card card-spacing">
+      <div class="modal-header">
+        <h3>2. AI Ideas & Theme Explorer</h3>
+        <button id="exploreThemesBtn" class="btn btn-secondary btn-sm"><span aria-hidden="true">🎨</span> Refresh Themes</button>
+      </div>
+      <p class="section-subtitle">Curated color palettes and décor aesthetics matching your celebration.</p>
+      <div id="ideasThemesList" class="grid-2 card-spacing"></div>
+    </div>
   `;
 
   initEventTypeDropdown(eventData.eventId);
@@ -82,6 +91,7 @@ export function initInvitationGenerator() {
   qs('#generateInvBtn')?.addEventListener('click', handleGenerateInvitation);
   qs('#copyInvBtn')?.addEventListener('click', handleCopyInvitation);
   qs('#downloadPdfBtn')?.addEventListener('click', handleDownloadPdf);
+  qs('#exploreThemesBtn')?.addEventListener('click', () => loadThemesIntoContainer('ideasThemesList'));
 
   window.addEventListener('celebmate:event-updated', (e) => {
     if (e.detail?.eventId) {
@@ -92,52 +102,8 @@ export function initInvitationGenerator() {
       }
     }
   });
-}
 
-/**
- * Sets up celebration type select options and syncs field labels.
- * @param {string} activeId
- */
-function initEventTypeDropdown(activeId) {
-  const select = qs('#invEventType');
-  if (!select) return;
-
-  Object.values(EVENT_TYPES).forEach((item) => {
-    const opt = document.createElement('option');
-    opt.value = item.id;
-    opt.textContent = `${item.icon} ${item.label}`;
-    select.appendChild(opt);
-  });
-
-  select.value = activeId || 'wedding';
-  updateHonoreeField(select.value);
-
-  select.addEventListener('change', () => {
-    updateHonoreeField(select.value);
-  });
-}
-
-/**
- * Updates label and placeholder based on selected event type.
- * @param {string} eventId
- */
-function updateHonoreeField(eventId) {
-  const label = qs('#invHonoreeLabel');
-  const input = qs('#invHonoree');
-  if (!label || !input) return;
-
-  if (eventId === 'birthday') {
-    label.textContent = "Birthday Person's Name";
-    input.placeholder = 'e.g., Ananya';
-    if (!input.value || input.value.includes('&')) input.value = 'Ananya';
-  } else if (eventId === 'wedding' || eventId === 'engagement') {
-    label.textContent = 'Couple Name(s)';
-    input.placeholder = 'e.g., Aarav & Ananya';
-    if (!input.value || !input.value.includes('&')) input.value = 'Aarav & Ananya';
-  } else {
-    label.textContent = 'Honoree / Family Name';
-    input.placeholder = 'e.g., Sharma Family';
-  }
+  loadThemesIntoContainer('ideasThemesList');
 }
 
 /**
@@ -155,7 +121,6 @@ async function handleGenerateInvitation() {
 
   const eventConfig = Object.values(EVENT_TYPES).find((e) => e.id === eventId);
   const eventLabel = eventConfig ? eventConfig.label : eventId;
-
   const genBtn = qs('#generateInvBtn');
   if (genBtn) genBtn.disabled = true;
 
@@ -196,7 +161,6 @@ async function handleCopyInvitation() {
     showToast('Please generate an invitation first.', 'warning');
     return;
   }
-
   try {
     await navigator.clipboard.writeText(text);
     showToast('Invitation copied to clipboard!', 'success');
@@ -211,11 +175,9 @@ async function handleCopyInvitation() {
 function handleDownloadPdf() {
   const title = qs('#cardHeaderTitle')?.textContent || 'Celebration Invitation';
   const text = qs('#invitationResultText')?.textContent;
-
   if (!text || text.includes('Click \'Generate Invitation\'')) {
     showToast('Please generate an invitation first.', 'warning');
     return;
   }
-
   exportInvitationToPdf(title, text);
 }

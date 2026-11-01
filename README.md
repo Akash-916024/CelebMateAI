@@ -20,16 +20,12 @@ graph LR
 
 ---
 
-## 🚀 Key Features
+## 🚀 Key Features — 4 Core Pillars of Challenge 5
 
-1. **💰 AI Budget Planner**: Calculates itemized expense allocations (Mandap, Catering, Photography, Décor, Attire, Rituals) formatted in Indian Rupees (INR) with visual breakdown.
-2. **📅 Smart Timeline Generator**: Produces chronological milestone checklists (6 Months, 4 Months, 1 Week, Day of Event) with interactive task completion tracking.
-3. **🤖 Celebration Assistant**: Context-aware conversational advisor providing cultural etiquette, multi-course Indian menus, and vendor negotiation tips.
-4. **💌 Multilingual Invitation Generator**: Crafts warm, culturally authentic invitation messages in English, Hindi, Tamil, Telugu, Kannada, and Malayalam across multiple tones with native PDF export.
-5. **🎭 Theme & Décor Suggester**: Curates thematic celebration aesthetics (Royal Heritage, Modern Pastel, Temple Heritage) with active color swatches and cost guidance.
-6. **🕉️ Muhurat & Auspicious Date Finder**: Discovers favorable dates, tithis, and nakshatras aligned with Vedic and regional (Tamil, Telugu, Malayalam) traditions.
-7. **🏪 Vendor Hub & Checklist**: Tracks service providers across key celebration categories with status pipelines and AI negotiation contract safeguards.
-8. **👥 Guest RSVP & Dietary Management**: Tracks attendee headcounts, traditional dietary splits (Pure Veg, Non-Veg, Jain), and one-click catering CSV exports.
+1. **💰 AI Budget Planner (Pillar 1)**: Calculates itemized expense allocations (Mandap/Venue, Catering, Photography, Décor, Attire, Rituals) formatted in Indian Rupees (INR) with visual donut chart breakdown.
+2. **📅 Smart Timeline & Auspicious Dates (Pillar 2)**: Produces chronological milestone checklists (6 Months, 4 Months, 1 Week, Day of Event) integrated with Panchang-aligned auspicious date insights.
+3. **🏪 Vendor Hub & Contracts (Pillar 3)**: Tracks service providers across key celebration categories with status pipelines and AI negotiation contract safeguards.
+4. **✨ Ideas Studio & Multilingual Invitations (Pillar 4)**: Crafts warm, culturally authentic invitation messages in English, Hindi, Tamil, Telugu, Kannada, and Malayalam across multiple tones with native PDF export and curated décor themes.
 
 ---
 
@@ -37,7 +33,7 @@ graph LR
 
 | Component | Technology | Rationale |
 |---|---|---|
-| **Core Framework** | Vanilla HTML5 & ES6 JavaScript | Zero npm bloat, instant load, sub-100KB footprint |
+| **Core Framework** | Vanilla HTML5 & ES6 JavaScript | Zero npm bloat, instant load, sub-120KB footprint |
 | **Styling** | Vanilla CSS3 (Custom Properties) | Zero inline styles, festive design tokens, full dark mode |
 | **GenAI Engine** | Google Gemini 3.1 Flash Lite API | High-throughput, low-latency, culturally aligned |
 | **Test Suite** | In-Browser Micro Runner (`tests/test.html`) | Instant test execution without Node/Python prerequisites |
@@ -49,8 +45,8 @@ graph LR
 
 | Hack2Skill Criteria | Implementation in CelebMate AI |
 |---|---|
-| **Code Quality** (High) | Strict modularity (<150 lines/file), zero inline styles, JSDoc typing, `.editorconfig`, 15+ git commits |
-| **Testing** (High) | 9 test suites covering validators, security, sanitizer, budget math, WCAG accessibility, muhurat, vendors, and guests |
+| **Code Quality** (High) | Strict modularity (<170 lines/file), zero inline styles, JSDoc typing, `.editorconfig`, 17+ git commits |
+| **Testing** (High) | 8 test suites covering validators, security, sanitizer, budget math, WCAG accessibility, muhurat, and vendors |
 | **Security** (Medium) | Client-side BYOK model, XSS prevention via `sanitizer.js`, zero PII leakage, documented `SECURITY.md` |
 | **Efficiency** (Medium) | Ultra-lightweight footprint (<100KB total repo size), session caching, debounced inputs |
 | **Accessibility** (Medium) | WCAG AA compliant contrast ratios, keyboard focus rings, ARIA live regions, skip-to-content navigation |

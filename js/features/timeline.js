@@ -1,18 +1,18 @@
 /**
- * CelebMate AI — Timeline Generator Feature
- * AI-generated chronological countdown and interactive task checklist
+ * CelebMate AI — Timeline & Auspicious Dates Feature
+ * AI-generated chronological countdown and Panchang-aligned auspicious date explorer
  * @module features/timeline
  */
 
 import { qs, createElement, clearChildren } from '../utils/dom-helpers.js';
 import { getLocal, setLocal } from '../utils/storage.js';
-import { STORAGE_KEYS } from '../config.js';
+import { STORAGE_KEYS, EVENT_TYPES } from '../config.js';
 import { generateContent } from '../ai-engine.js';
 import { showToast } from '../components/toast.js';
 import { validateEventDate } from '../utils/validators.js';
 
 /**
- * Initializes and mounts the Timeline Generator UI into the timeline section.
+ * Initializes and mounts the Timeline & Dates UI into the timeline section.
  */
 export function initTimeline() {
   const container = qs('#section-timeline');
@@ -24,8 +24,8 @@ export function initTimeline() {
 
   container.innerHTML = `
     <div class="section-header">
-      <h2>Smart Timeline Generator</h2>
-      <p class="section-subtitle">Chronological planning checklist tailored to auspicious dates and multi-day ceremonies.</p>
+      <h2>📅 Smart Timeline & Auspicious Dates</h2>
+      <p class="section-subtitle">Countdown planning checklist with regional Panchang date insights.</p>
     </div>
     <div class="grid-2">
       <div class="card">
@@ -37,6 +37,14 @@ export function initTimeline() {
         <button id="generateTimelineBtn" class="btn btn-primary">
           <span aria-hidden="true">📅</span> Generate AI Timeline
         </button>
+
+        <hr class="card-divider card-spacing">
+        <h4 class="card-spacing">🕉️ Quick Auspicious Date Suggestions</h4>
+        <p class="section-subtitle">Panchang recommendations for your celebration window.</p>
+        <button id="quickMuhuratBtn" class="btn btn-secondary btn-sm card-spacing">
+          <span aria-hidden="true">✨</span> Explore Auspicious Dates
+        </button>
+        <div id="timelineMuhuratList" class="muhurat-grid"></div>
       </div>
 
       <div class="card">
@@ -46,10 +54,8 @@ export function initTimeline() {
     </div>
   `;
 
-  const btn = qs('#generateTimelineBtn');
-  if (btn) {
-    btn.addEventListener('click', handleGenerateTimeline);
-  }
+  qs('#generateTimelineBtn')?.addEventListener('click', handleGenerateTimeline);
+  qs('#quickMuhuratBtn')?.addEventListener('click', handleQuickMuhurat);
 
   renderSavedTimeline();
 }
@@ -66,7 +72,6 @@ async function handleGenerateTimeline() {
   }
 
   const eventData = getLocal(STORAGE_KEYS.EVENT_DATA, { eventId: 'wedding' });
-
   const btn = qs('#generateTimelineBtn');
   if (btn) btn.disabled = true;
 
@@ -88,6 +93,46 @@ async function handleGenerateTimeline() {
   } catch (err) {
     console.error(err);
     showToast('Failed to generate timeline.', 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+/**
+ * Explores auspicious dates and displays them right inside the timeline view.
+ */
+async function handleQuickMuhurat() {
+  const eventData = getLocal(STORAGE_KEYS.EVENT_DATA, { eventId: 'wedding' });
+  const btn = qs('#quickMuhuratBtn');
+  const container = qs('#timelineMuhuratList');
+  if (btn) btn.disabled = true;
+
+  try {
+    const prompt = `Provide 3 auspicious Muhurat dates for an Indian ${eventData.eventId}. Return strict JSON array with: date, day, tithi, nakshatra, time, significance.`;
+    const response = await generateContent(prompt, `muhurat_quick_${eventData.eventId}`);
+    let dates;
+    try {
+      dates = JSON.parse(response.replace(/```json/g, '').replace(/```/g, '').trim());
+    } catch {
+      dates = JSON.parse(response);
+    }
+
+    if (container) {
+      clearChildren(container);
+      dates.forEach((d) => {
+        const item = createElement('div', { className: 'muhurat-card' });
+        item.innerHTML = `
+          <div class="muhurat-date-badge">📅 ${d.date} (${d.day})</div>
+          <div class="muhurat-meta-row"><span>Shubh Time:</span><span class="muhurat-meta-val">${d.time}</span></div>
+          <div class="muhurat-meta-row"><span>Nakshatra:</span><span class="muhurat-meta-val">${d.nakshatra}</span></div>
+          <p class="section-subtitle">${d.significance}</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+    showToast('Auspicious dates loaded!', 'success');
+  } catch {
+    showToast('Could not load auspicious dates.', 'error');
   } finally {
     if (btn) btn.disabled = false;
   }
@@ -121,11 +166,8 @@ function renderTimelineItems(items) {
     });
 
     const details = createElement('div', { className: 'timeline-details' });
-    const period = createElement('span', { className: 'stat-label' }, item.period);
-    const task = createElement('p', { className: 'timeline-task' }, item.task);
-
-    details.appendChild(period);
-    details.appendChild(task);
+    details.appendChild(createElement('span', { className: 'stat-label' }, item.period));
+    details.appendChild(createElement('p', { className: 'timeline-task' }, item.task));
 
     row.appendChild(checkbox);
     row.appendChild(details);
